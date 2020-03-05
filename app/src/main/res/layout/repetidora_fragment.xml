@@ -42,8 +42,8 @@
             android:text="Zona" />
 
         <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="wrap_content"
+            android:id="@+id/spinnerZona"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <TextView
@@ -53,8 +53,8 @@
             android:text="Repetidora Con Control" />
 
         <Spinner
-            android:id="@+id/spinner2"
-            android:layout_width="wrap_content"
+            android:id="@+id/spinnerRepControl"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
@@ -70,7 +70,7 @@
             android:text="Antena Nodo" />
 
         <Spinner
-            android:id="@+id/spinner3"
+            android:id="@+id/spinnerAntNodo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -81,7 +81,7 @@
             android:text="Antena Coordinador" />
 
         <Spinner
-            android:id="@+id/spinner3"
+            android:id="@+id/spinnerAntCoord"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -92,7 +92,7 @@
             android:text="Antena Rep Nodo" />
 
         <Spinner
-            android:id="@+id/spinner3"
+            android:id="@+id/spinnerAntRepNodo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -103,7 +103,7 @@
             android:text="Antena Rep Coord" />
 
         <Spinner
-            android:id="@+id/spinner3"
+            android:id="@+id/spinnerAntRepCoord"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
