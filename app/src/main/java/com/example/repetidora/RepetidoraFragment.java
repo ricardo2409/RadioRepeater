@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ public class RepetidoraFragment extends Fragment implements AdapterView.OnItemSe
 
     Spinner spinnerAntNodo, spinnerAntCoord, spinnerAntRepNodo, spinnerAntRepCoord, spinnerZona, spinnerRepControl;
     ArrayAdapter<String> adapterAntNodo, adapterAntCoord, adapterAntRepNodo, adapterAntRepCoord, adapterZona, adapterRepControl;
+    EditText etNodeID, etNetID, etPotencia1, etPotencia2;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -27,6 +29,10 @@ public class RepetidoraFragment extends Fragment implements AdapterView.OnItemSe
         spinnerAntRepCoord = (Spinner) view.findViewById(R.id.spinnerAntRepCoord);
         spinnerZona = (Spinner) view.findViewById(R.id.spinnerZona);
         spinnerRepControl = (Spinner) view.findViewById(R.id.spinnerRepControl);
+        etNodeID = (EditText) view.findViewById(R.id.etNodeID);
+        etNetID = (EditText) view.findViewById(R.id.etNetID);
+        etPotencia1 = (EditText) view.findViewById(R.id.etPotencia1);
+        etPotencia2 = (EditText) view.findViewById(R.id.etPotencia2);
         fillSpinners();
         return view;
     }

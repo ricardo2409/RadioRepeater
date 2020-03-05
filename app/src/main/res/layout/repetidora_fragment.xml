@@ -5,7 +5,7 @@
 
 
     <LinearLayout
-        android:layout_width="450sp"
+        android:layout_width="300sp"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
@@ -13,10 +13,11 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Node ID" />
+            android:text="Node ID"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/etNodeID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -26,10 +27,11 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Net ID" />
+            android:text="Net ID"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/etNetID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -39,7 +41,8 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Zona" />
+            android:text="Zona"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <Spinner
             android:id="@+id/spinnerZona"
@@ -50,7 +53,8 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Repetidora Con Control" />
+            android:text="Repetidora Con Control"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <Spinner
             android:id="@+id/spinnerRepControl"
@@ -59,7 +63,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="450sp"
+        android:layout_width="300sp"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
@@ -67,7 +71,8 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Antena Nodo" />
+            android:text="Antena Nodo"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <Spinner
             android:id="@+id/spinnerAntNodo"
@@ -78,7 +83,8 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Antena Coordinador" />
+            android:text="Antena Coordinador"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <Spinner
             android:id="@+id/spinnerAntCoord"
@@ -89,7 +95,8 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Antena Rep Nodo" />
+            android:text="Antena Rep Nodo"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <Spinner
             android:id="@+id/spinnerAntRepNodo"
@@ -100,21 +107,31 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Antena Rep Coord" />
+            android:text="Antena Rep Coord"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <Spinner
             android:id="@+id/spinnerAntRepCoord"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Potencia Antena 1" />
+            android:text="Potencia Antena 1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/etPotencia1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -124,10 +141,11 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Potencia Antena 2" />
+            android:text="Potencia Antena 2"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/etPotencia2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
