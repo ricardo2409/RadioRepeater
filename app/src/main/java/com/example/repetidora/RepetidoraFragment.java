@@ -86,11 +86,23 @@ public class RepetidoraFragment extends Fragment implements AdapterView.OnItemSe
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         ((TextView) adapterView.getChildAt(0)).setTextSize(30);//Tamaño del textview
+        switch (view.getId()){
+            case R.id.spinnerZona:
+                print(adapterView.getSelectedItem().toString());
+                break;
+            case R.id.spinnerRepControl:
+                //Do another thing
+                break;
+        }
 
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    public void print(String message){
+        System.out.println(message);
     }
 }

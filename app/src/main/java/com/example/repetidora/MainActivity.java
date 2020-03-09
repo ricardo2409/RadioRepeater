@@ -19,9 +19,12 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Set;
@@ -59,6 +62,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         transaction.add(R.id.fragment_container, repetidoraFragment);
         transaction.commit();
     }
+
     public void initItems(){
         tvConect = (TextView) findViewById(R.id.tvConnect);
         btnConnect = (Button) findViewById(R.id.btnConnect);
@@ -142,8 +146,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         outputStream = socket.getOutputStream();
         inputStream = socket.getInputStream();
         beginListenForData();
-
-
     }
 
     public void desconectarBluetooth() throws IOException{
@@ -160,11 +162,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         resetFields();
         connected = false;
         tvConect.setText("");
-        btnConnect.setText("Conectar a módulo Bluetooth");
+        btnConnect.setText("Conectar a Repetidora");
         device = null;
         stopThread = true;
         socketConectado = false;
     }
+
     public void resetFields(){
         repetidoraFragment.etNodeID.setText("");
         repetidoraFragment.etNetID.setText("");
@@ -190,7 +193,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    readMessage(s);
+                                    try {
+                                        readBytesBufferedReader();////////
+                                    } catch (IOException ex) {
+                                    }
+
                                 }
                             });
                         }
@@ -205,18 +212,112 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         thread.start();
     }
 
-    public static void readMessage(String frase)  {
-        System.out.println("Estoy en el readMessage: ");
-        System.out.println(frase);
-        tokens = frase.split(",");
-        System.out.println("Tokens: " + Arrays.toString(tokens));
-        //Status
-        if (frase.contains("s,") && tokens.length >= 8) {
+    //Lee lo que le manda el radio cuando recibe "ATI5\r"
+    public void readBytesBufferedReader() throws IOException{
+        ArrayList<String> list = new ArrayList<String>();
+        BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        for(int i = 0; i < 21; i++) {
+            String line = br.readLine();
+            list.add(line);
+            System.out.println(line);
+            // process line
+        }
 
+        System.out.println(list);
+        System.out.println();
 
+        updateValues(readValues(list));
+
+    }
+    //Función que recibe strings con todos los parámetros y retorna solo los valores
+    public ArrayList<String> readValues(ArrayList<String> lista) {
+
+        ArrayList<String> valores = new ArrayList<String>();
+        System.out.println("Size: " + lista.size());
+        System.out.println("Lista: " + lista);
+
+        for (int i = 0; i < lista.size(); i++) {
+            System.out.println("i: " + i);
+            System.out.println(lista.get(i));
+            System.out.println("Numero leído: " + lista.get(i).substring(lista.get(i).indexOf('=') + 1));
+            valores.add(lista.get(i).substring(lista.get(i).indexOf('=') + 1, lista.get(i).length()));
+
+        }
+        System.out.println(valores);
+        return valores;
+
+    }
+
+    //Actualiza los valores en los spinners
+    public void updateValues(ArrayList<String> arreglo) {
+
+        System.out.println("Arreglo Size: " + arreglo.size());
+        if (arreglo.size() > 19) {
+            repetidoraFragment.etNodeID.setText(arreglo.get(2));
+            repetidoraFragment.etNetID.setText(arreglo.get(1));
+            repetidoraFragment.etPotencia1.setText(arreglo.get(14));
+            repetidoraFragment.etPotencia2.setText(arreglo.get(15));
+            repetidoraFragment.spinnerZona.setSelection(Integer.valueOf(arreglo.get(0)));
+            repetidoraFragment.spinnerRepControl.setSelection(Integer.valueOf(arreglo.get(20)));
+            repetidoraFragment.spinnerAntNodo.setSelection(Integer.valueOf(arreglo.get(12)));
+            repetidoraFragment.spinnerAntCoord.setSelection(Integer.valueOf(arreglo.get(13)));
+            repetidoraFragment.spinnerAntRepNodo.setSelection(Integer.valueOf(arreglo.get(11)));
+            repetidoraFragment.spinnerAntRepCoord.setSelection(Integer.valueOf(arreglo.get(10)));
+
+            System.out.println("Sí modifiqué los valores ! ");
+
+        }else{
+            System.out.println("Arreglo menor de 19");
+        }
+        sendSave();
+        sendATZ();
+    }
+
+    void sendCommand(){
+        try {
+            System.out.println("Estoy en sendCommand");
+            String msg = "+++";
+            outputStream.write(msg.getBytes());
+        } catch (IOException ex) {
         }
     }
 
+    void sendATI5(){
+        try {
+            System.out.println("Estoy en ATI5");
+            String msg = "ATI5\r";
+            outputStream.write(msg.getBytes());
+        } catch (IOException ex) {
+        }
+    }
+
+    void sendSave(){ //Falta checar
+        try {
+            System.out.println("Estoy en AT&W");
+            String msg = "AT&W\r";
+            outputStream.write(msg.getBytes());
+        } catch (IOException ex) {
+        }
+    }
+
+    void sendATZ(){
+        try {
+            System.out.println("Estoy en ATZ");
+            String msg = "ATZ\r";
+            outputStream.write(msg.getBytes());
+        } catch (IOException ex) {
+        }
+    }
+
+    public void showToast(final String toast)
+    {
+        runOnUiThread(new Runnable() {
+            public void run()
+            {
+                Toast.makeText(MainActivity.this, toast, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     @Override
     public void onClick(View view) {
@@ -224,22 +325,29 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case R.id.btnConnect:
                 if (!connected) {
                     if (BTinit()) {
-
                         BTconnect();
-                        /*
-                        try{
-                            askGPS();
-                        }catch(IOException e){
-
-                        }
-                        */
-
                     }
                 } else {
                     try {
                         desconectarBluetooth();
                     } catch (IOException ex) {
                     }
+                }
+                break;
+            case R.id.btnSolicitar:
+                if(connected){
+                    sendCommand();
+                    sendATI5();
+                }else{
+                    showToast("Bluetooth desconectado");
+                }
+                break;
+
+            case R.id.btnConfigurar:
+                if(connected){
+
+                }else{
+                    showToast("Bluetooth desconectado");
                 }
                 break;
         }
