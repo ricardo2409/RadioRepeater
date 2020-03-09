@@ -1,6 +1,8 @@
 package com.example.repetidora;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +21,7 @@ public class RepetidoraFragment extends Fragment implements AdapterView.OnItemSe
     Spinner spinnerAntNodo, spinnerAntCoord, spinnerAntRepNodo, spinnerAntRepCoord, spinnerZona, spinnerRepControl;
     ArrayAdapter<String> adapterAntNodo, adapterAntCoord, adapterAntRepNodo, adapterAntRepCoord, adapterZona, adapterRepControl;
     EditText etNodeID, etNetID, etPotencia1, etPotencia2;
-    String S0, S20, S12, S10, S11, S13 = "";
+    String S0, S20, S12, S10, S11, S13, stringETnodeID, stringETnetID, stringPotencia1, stringPotencia2 = "";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -31,9 +33,96 @@ public class RepetidoraFragment extends Fragment implements AdapterView.OnItemSe
         spinnerZona = (Spinner) view.findViewById(R.id.spinnerZona);
         spinnerRepControl = (Spinner) view.findViewById(R.id.spinnerRepControl);
         etNodeID = (EditText) view.findViewById(R.id.etNodeID);
+        etNodeID.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(etNodeID.equals("")){
+                    print("etnodeid vacio");
+                }else{
+                    stringETnodeID = etNodeID.getText().toString();
+                    print("etnodeid : " + stringETnodeID );
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         etNetID = (EditText) view.findViewById(R.id.etNetID);
+        etNetID.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(etNodeID.equals("")){
+                    print("etnetid vacio");
+                }else{
+                    stringETnetID = etNetID.getText().toString();
+                    print("etnetid : " + stringETnetID );
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         etPotencia1 = (EditText) view.findViewById(R.id.etPotencia1);
+        etPotencia1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(etPotencia1.equals("")){
+                    print("potencia1 vacio");
+                }else{
+                    stringPotencia1 = etPotencia1.getText().toString();
+                    print("Potencia 1: " + stringPotencia1 );
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         etPotencia2 = (EditText) view.findViewById(R.id.etPotencia2);
+        etPotencia2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(etPotencia2.equals("")){
+                    print("potencia2 vacio");
+                }else{
+                    stringPotencia2 = etPotencia2.getText().toString();
+                    print("Potencia 2: " + stringPotencia2 );
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         fillSpinners();
         return view;
     }
