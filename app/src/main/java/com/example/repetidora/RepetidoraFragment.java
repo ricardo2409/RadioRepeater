@@ -19,6 +19,7 @@ public class RepetidoraFragment extends Fragment implements AdapterView.OnItemSe
     Spinner spinnerAntNodo, spinnerAntCoord, spinnerAntRepNodo, spinnerAntRepCoord, spinnerZona, spinnerRepControl;
     ArrayAdapter<String> adapterAntNodo, adapterAntCoord, adapterAntRepNodo, adapterAntRepCoord, adapterZona, adapterRepControl;
     EditText etNodeID, etNetID, etPotencia1, etPotencia2;
+    String S0, S20, S12, S10, S11, S13 = "";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -83,16 +84,37 @@ public class RepetidoraFragment extends Fragment implements AdapterView.OnItemSe
     }
 
 
+
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         ((TextView) adapterView.getChildAt(0)).setTextSize(30);//Tamaño del textview
-        switch (view.getId()){
+        print("item seleccionado");
+        switch (adapterView.getId()){
             case R.id.spinnerZona:
-                print(adapterView.getSelectedItem().toString());
+                print("Esto tiene S0: " + adapterView.getItemAtPosition(i).toString());
+                S0 = adapterView.getItemAtPosition(i).toString();
                 break;
             case R.id.spinnerRepControl:
-                //Do another thing
+                print("Esto tiene S20: " + adapterView.getItemAtPosition(i).toString());
+                S20 = adapterView.getItemAtPosition(i).toString();
                 break;
+            case R.id.spinnerAntNodo:
+                print("Esto tiene S12: " + adapterView.getItemAtPosition(i).toString());
+                S12 = adapterView.getItemAtPosition(i).toString();
+                break;
+            case R.id.spinnerAntCoord:
+                print("Esto tiene S10: " + adapterView.getItemAtPosition(i).toString());
+                S10 = adapterView.getItemAtPosition(i).toString();
+                break;
+            case R.id.spinnerAntRepNodo:
+                print("Esto tiene S11: " + adapterView.getItemAtPosition(i).toString());
+                S11 = adapterView.getItemAtPosition(i).toString();
+                break;
+            case R.id.spinnerAntRepCoord:
+                print("Esto tiene S13: " + adapterView.getItemAtPosition(i).toString());
+                S13 = adapterView.getItemAtPosition(i).toString();
+                break;
+
         }
 
     }

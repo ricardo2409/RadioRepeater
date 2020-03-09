@@ -309,6 +309,128 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
+    public void write10(final String s10) throws IOException{
+        Runnable r = new Runnable() {
+            @Override
+            public void run(){
+
+                try {
+                    System.out.println("Estoy en el writeS10");
+                    String msg1 = "ATS10=" + s10 + "\r";
+                    System.out.println(msg1);
+                    outputStream.write(msg1.getBytes());
+
+                } catch (IOException ex) {
+                }
+
+            }
+        };
+
+        Handler h = new Handler();
+        h.postDelayed(r, 10);
+    }
+    public void write11(final String s11) throws IOException{
+        Runnable r = new Runnable() {
+            @Override
+            public void run(){
+
+                try {
+                    System.out.println("Estoy en el writeS11");
+                    String msg1 = "ATS11=" + s11 + "\r";
+                    System.out.println(msg1);
+                    outputStream.write(msg1.getBytes());
+
+                } catch (IOException ex) {
+                }
+
+            }
+        };
+
+        Handler h = new Handler();
+        h.postDelayed(r, 10);
+    }
+    public void write12(final String s12) throws IOException{
+        Runnable r = new Runnable() {
+            @Override
+            public void run(){
+
+                try {
+                    System.out.println("Estoy en el writeS12");
+                    String msg1 = "ATS12=" + s12 + "\r";
+                    System.out.println(msg1);
+                    outputStream.write(msg1.getBytes());
+
+                } catch (IOException ex) {
+                }
+
+            }
+        };
+
+        Handler h = new Handler();
+        h.postDelayed(r, 10);
+    }
+
+    public void write13(final String s13) throws IOException{
+        Runnable r = new Runnable() {
+            @Override
+            public void run(){
+
+                try {
+                    System.out.println("Estoy en el writeS13");
+                    String msg1 = "ATS10=" + s13 + "\r";
+                    System.out.println(msg1);
+                    outputStream.write(msg1.getBytes());
+
+                } catch (IOException ex) {
+                }
+
+            }
+        };
+
+        Handler h = new Handler();
+        h.postDelayed(r, 10);
+    }
+    public void write0(final String s0) throws IOException{
+        Runnable r = new Runnable() {
+            @Override
+            public void run(){
+
+                try {
+                    System.out.println("Estoy en el writeS0");
+                    String msg1 = "ATS10=" + s0 + "\r";
+                    System.out.println(msg1);
+                    outputStream.write(msg1.getBytes());
+
+                } catch (IOException ex) {
+                }
+
+            }
+        };
+
+        Handler h = new Handler();
+        h.postDelayed(r, 10);
+    }
+    public void write20(final String s20) throws IOException{
+        Runnable r = new Runnable() {
+            @Override
+            public void run(){
+
+                try {
+                    System.out.println("Estoy en el writeS20");
+                    String msg1 = "ATS10=" + s20 + "\r";
+                    System.out.println(msg1);
+                    outputStream.write(msg1.getBytes());
+
+                } catch (IOException ex) {
+                }
+
+            }
+        };
+
+        Handler h = new Handler();
+        h.postDelayed(r, 10);
+    }
+
     public void showToast(final String toast)
     {
         runOnUiThread(new Runnable() {
@@ -345,7 +467,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
             case R.id.btnConfigurar:
                 if(connected){
-
+                    sendCommand();
+                    sendATI5();
+                    try {
+                        write0(repetidoraFragment.S0);
+                        write10(repetidoraFragment.S10);
+                        write11(repetidoraFragment.S11);
+                        write12(repetidoraFragment.S12);
+                        write13(repetidoraFragment.S13);
+                        write20(repetidoraFragment.S20);
+                    } catch (IOException ex) {
+                    }
+                    sendSave();
+                    sendATZ();
                 }else{
                     showToast("Bluetooth desconectado");
                 }
