@@ -52,6 +52,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     TextView tvConect;
     Button btnConnect, btnSolicitar, btnConfigurar;
+    Handler h;
+    Runnable r;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,6 +180,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
     void beginListenForData() {
+        System.out.println("Estoy en begin");
         stopThread = false;
         thread = new Thread(new Runnable() {
             public void run() {
@@ -186,20 +189,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         //waitMs(1000);
                         final int byteCount = inputStream.available();
                         if(byteCount > 0) {
-                            byte[] packetBytes = new byte[byteCount];
-                            inputStream.read(packetBytes);
-                            s = new String(packetBytes);
-                            System.out.println("Linea: " + s);
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        readBytesBufferedReader();////////
-                                    } catch (IOException ex) {
-                                    }
-
-                                }
-                            });
+                            readBytesBufferedReader();
                         }
                     }
                     catch (IOException ex) {
@@ -214,8 +204,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     //Lee lo que le manda el radio cuando recibe "ATI5\r"
     public void readBytesBufferedReader() throws IOException{
+        print("Estoy en readbytes");
         ArrayList<String> list = new ArrayList<String>();
         BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        print("Esto tiene el br: " + br);
         for(int i = 0; i < 21; i++) {
             String line = br.readLine();
             list.add(line);
@@ -223,7 +215,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             // process line
         }
 
-        System.out.println(list);
+        System.out.println("Esto tiene la lista: " + list);
         System.out.println();
 
         updateValues(readValues(list));
@@ -249,28 +241,33 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     //Actualiza los valores en los spinners
-    public void updateValues(ArrayList<String> arreglo) {
+    public void updateValues(final ArrayList<String> arreglo) {
 
         System.out.println("Arreglo Size: " + arreglo.size());
-        if (arreglo.size() > 19) {
-            repetidoraFragment.etNodeID.setText(arreglo.get(2));
-            repetidoraFragment.etNetID.setText(arreglo.get(1));
-            repetidoraFragment.etPotencia1.setText(arreglo.get(14));
-            repetidoraFragment.etPotencia2.setText(arreglo.get(15));
-            repetidoraFragment.spinnerZona.setSelection(Integer.valueOf(arreglo.get(0)));
-            repetidoraFragment.spinnerRepControl.setSelection(Integer.valueOf(arreglo.get(20)));
-            repetidoraFragment.spinnerAntNodo.setSelection(Integer.valueOf(arreglo.get(12)));
-            repetidoraFragment.spinnerAntCoord.setSelection(Integer.valueOf(arreglo.get(13)));
-            repetidoraFragment.spinnerAntRepNodo.setSelection(Integer.valueOf(arreglo.get(11)));
-            repetidoraFragment.spinnerAntRepCoord.setSelection(Integer.valueOf(arreglo.get(10)));
+        if (arreglo.size() > 20) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    repetidoraFragment.etNodeID.setText(arreglo.get(4));
+                    repetidoraFragment.etNetID.setText(arreglo.get(3));
+                    repetidoraFragment.etPotencia1.setText(arreglo.get(16));
+                    repetidoraFragment.etPotencia2.setText(arreglo.get(17));
+                    repetidoraFragment.spinnerZona.setSelection(Integer.valueOf(arreglo.get(2)));
+                    repetidoraFragment.spinnerRepControl.setSelection(Integer.valueOf(arreglo.get(22)));
+                    repetidoraFragment.spinnerAntNodo.setSelection(Integer.valueOf(arreglo.get(14)));
+                    repetidoraFragment.spinnerAntCoord.setSelection(Integer.valueOf(arreglo.get(15)));
+                    repetidoraFragment.spinnerAntRepNodo.setSelection(Integer.valueOf(arreglo.get(13)));
+                    repetidoraFragment.spinnerAntRepCoord.setSelection(Integer.valueOf(arreglo.get(12)));
+                }
+            });
 
             System.out.println("Sí modifiqué los valores ! ");
 
         }else{
             System.out.println("Arreglo menor de 19");
         }
-        sendSave();
-        sendATZ();
+        //sendSave();
+        //sendATZ();
     }
 
     void sendCommand(){
@@ -282,13 +279,23 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-    void sendATI5(){
-        try {
-            System.out.println("Estoy en ATI5");
-            String msg = "ATI5\r";
-            outputStream.write(msg.getBytes());
-        } catch (IOException ex) {
-        }
+    void sendATI5() throws IOException{
+        r = new Runnable() {
+            @Override
+            public void run(){
+                try {
+                    System.out.println("Estoy en ATI5");
+                    String msg = "ATI5\r";
+                    outputStream.write(msg.getBytes());
+                } catch (IOException ex) {
+                }
+
+            }
+        };
+        h  = new Handler();
+        h.postDelayed(r, 1500);
+
+
     }
 
     void sendSave(){ //Falta checar
@@ -459,7 +466,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case R.id.btnSolicitar:
                 if(connected){
                     sendCommand();
-                    sendATI5();
+                    try {
+                        sendATI5();
+                    } catch (IOException ex) {
+                    }
+
                 }else{
                     showToast("Bluetooth desconectado");
                 }
@@ -468,8 +479,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case R.id.btnConfigurar:
                 if(connected){
                     sendCommand();
-                    sendATI5();
                     try {
+                        sendATI5();
                         write0(repetidoraFragment.S0);
                         write10(repetidoraFragment.S10);
                         write11(repetidoraFragment.S11);
@@ -485,6 +496,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
                 break;
         }
+    }
+    public void print(String message){
+        System.out.println(message);
     }
 
 }

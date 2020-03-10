@@ -2,6 +2,7 @@ package com.example.repetidora;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,7 @@ public class RepetidoraFragment extends Fragment implements AdapterView.OnItemSe
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(etNodeID.equals("")){
+                if(TextUtils.isEmpty(etNodeID.getText().toString())){
                     print("etnodeid vacio");
                 }else{
                     stringETnodeID = etNodeID.getText().toString();
@@ -64,7 +65,7 @@ public class RepetidoraFragment extends Fragment implements AdapterView.OnItemSe
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(etNodeID.equals("")){
+                if(TextUtils.isEmpty(etNetID.getText().toString())){
                     print("etnetid vacio");
                 }else{
                     stringETnetID = etNetID.getText().toString();
@@ -87,7 +88,7 @@ public class RepetidoraFragment extends Fragment implements AdapterView.OnItemSe
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(etPotencia1.equals("")){
+                if(TextUtils.isEmpty(etPotencia1.getText().toString())){
                     print("potencia1 vacio");
                 }else{
                     stringPotencia1 = etPotencia1.getText().toString();
@@ -110,7 +111,7 @@ public class RepetidoraFragment extends Fragment implements AdapterView.OnItemSe
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(etPotencia2.equals("")){
+                if(TextUtils.isEmpty(etPotencia2.getText().toString())){
                     print("potencia2 vacio");
                 }else{
                     stringPotencia2 = etPotencia2.getText().toString();
