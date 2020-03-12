@@ -169,7 +169,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         stopThread = true;
         socketConectado = false;
     }
-
     public void resetFields(){
         repetidoraFragment.etNodeID.setText("");
         repetidoraFragment.etNetID.setText("");
@@ -177,8 +176,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         repetidoraFragment.etPotencia2.setText("");
         //Falta resetear los spinners " "
     }
-
-
     void beginListenForData() {
         System.out.println("Estoy en begin");
         stopThread = false;
@@ -201,73 +198,64 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         });
         thread.start();
     }
-
     //Lee lo que le manda el radio cuando recibe "ATI5\r"
     public void readBytesBufferedReader() throws IOException{
         print("Estoy en readbytes");
         ArrayList<String> list = new ArrayList<String>();
         BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        print("Esto tiene el br: " + br);
-        for(int i = 0; i < 21; i++) {
-            String line = br.readLine();
-            list.add(line);
-            System.out.println(line);
-            // process line
-        }
 
+        while(br.ready()){
+            String line = br.readLine();
+            if(line.contains("[") && line.contains("=")){
+                print("Esta es la linea que agrego a la lista: " +  line);
+                list.add(line);
+            }
+        }
         System.out.println("Esto tiene la lista: " + list);
         System.out.println();
-
         updateValues(readValues(list));
-
+        list.clear(); //Limpia todos los valores para la siguiente leida
     }
     //Función que recibe strings con todos los parámetros y retorna solo los valores
     public ArrayList<String> readValues(ArrayList<String> lista) {
-
         ArrayList<String> valores = new ArrayList<String>();
         System.out.println("Size: " + lista.size());
         System.out.println("Lista: " + lista);
-
         for (int i = 0; i < lista.size(); i++) {
             System.out.println("i: " + i);
             System.out.println(lista.get(i));
             System.out.println("Numero leído: " + lista.get(i).substring(lista.get(i).indexOf('=') + 1));
             valores.add(lista.get(i).substring(lista.get(i).indexOf('=') + 1, lista.get(i).length()));
-
         }
         System.out.println(valores);
         return valores;
-
     }
 
     //Actualiza los valores en los spinners
     public void updateValues(final ArrayList<String> arreglo) {
-
         System.out.println("Arreglo Size: " + arreglo.size());
         if (arreglo.size() > 20) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    repetidoraFragment.etNodeID.setText(arreglo.get(4));
-                    repetidoraFragment.etNetID.setText(arreglo.get(3));
-                    repetidoraFragment.etPotencia1.setText(arreglo.get(16));
-                    repetidoraFragment.etPotencia2.setText(arreglo.get(17));
-                    repetidoraFragment.spinnerZona.setSelection(Integer.valueOf(arreglo.get(2)));
-                    repetidoraFragment.spinnerRepControl.setSelection(Integer.valueOf(arreglo.get(22)));
-                    repetidoraFragment.spinnerAntNodo.setSelection(Integer.valueOf(arreglo.get(14)));
-                    repetidoraFragment.spinnerAntCoord.setSelection(Integer.valueOf(arreglo.get(15)));
-                    repetidoraFragment.spinnerAntRepNodo.setSelection(Integer.valueOf(arreglo.get(13)));
-                    repetidoraFragment.spinnerAntRepCoord.setSelection(Integer.valueOf(arreglo.get(12)));
+                    repetidoraFragment.etNodeID.setText(arreglo.get(2));
+                    repetidoraFragment.etNetID.setText(arreglo.get(1));
+                    int potencia1 = Integer.parseInt(arreglo.get(14));
+                    repetidoraFragment.etPotencia1.setText(String.valueOf(potencia1));
+                    int potencia2 = Integer.parseInt(arreglo.get(15));
+                    repetidoraFragment.etPotencia2.setText(String.valueOf(potencia2));
+                    repetidoraFragment.spinnerZona.setSelection(Integer.valueOf(arreglo.get(0)));
+                    repetidoraFragment.spinnerRepControl.setSelection(Integer.valueOf(arreglo.get(20)));
+                    repetidoraFragment.spinnerAntNodo.setSelection(Integer.valueOf(arreglo.get(12)));
+                    repetidoraFragment.spinnerAntCoord.setSelection(Integer.valueOf(arreglo.get(13)));
+                    repetidoraFragment.spinnerAntRepNodo.setSelection(Integer.valueOf(arreglo.get(11)));
+                    repetidoraFragment.spinnerAntRepCoord.setSelection(Integer.valueOf(arreglo.get(10)));
                 }
             });
-
             System.out.println("Sí modifiqué los valores ! ");
-
         }else{
             System.out.println("Arreglo menor de 19");
         }
-        //sendSave();
-        //sendATZ();
     }
 
     void sendCommand(){
@@ -293,37 +281,53 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             }
         };
         h  = new Handler();
-        h.postDelayed(r, 1500);
-
-
+        h.postDelayed(r, 1000);
     }
 
-    void sendSave(){ //Falta checar
-        try {
-            System.out.println("Estoy en AT&W");
-            String msg = "AT&W\r";
-            outputStream.write(msg.getBytes());
-        } catch (IOException ex) {
-        }
+    public void sendSave() throws IOException{
+        Runnable r = new Runnable() {
+            @Override
+            public void run(){
+
+                try {
+                    System.out.println("Estoy en el sendSave");
+                    String msg1 = "AT&W\r";
+                    System.out.println(msg1);
+                    outputStream.write(msg1.getBytes());
+
+                } catch (IOException ex) {
+                }
+            }
+        };
+
+        Handler h = new Handler();
+        h.postDelayed(r, 2100);
     }
 
-    void sendATZ(){
-        try {
-            System.out.println("Estoy en ATZ");
-            String msg = "ATZ\r";
-            outputStream.write(msg.getBytes());
-        } catch (IOException ex) {
-        }
+    void sendATZ() throws IOException{
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    System.out.println("Estoy en ATZ");
+                    String msg = "ATZ\r";
+                    outputStream.write(msg.getBytes());
+                } catch (IOException ex) {
+                }
+            }
+        };
+        Handler h = new Handler();
+        h.postDelayed(r, 2200);
     }
 
     public void write10(final String s10) throws IOException{
         Runnable r = new Runnable() {
             @Override
             public void run(){
-
+            int aux = Integer.valueOf(s10)-1;
                 try {
                     System.out.println("Estoy en el writeS10");
-                    String msg1 = "ATS10=" + s10 + "\r";
+                    String msg1 = "ATS10=" + aux + "\r";
                     System.out.println(msg1);
                     outputStream.write(msg1.getBytes());
 
@@ -334,16 +338,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         };
 
         Handler h = new Handler();
-        h.postDelayed(r, 10);
+        h.postDelayed(r, 1100);
     }
     public void write11(final String s11) throws IOException{
         Runnable r = new Runnable() {
             @Override
             public void run(){
-
+                int aux = Integer.valueOf(s11)-1;
                 try {
                     System.out.println("Estoy en el writeS11");
-                    String msg1 = "ATS11=" + s11 + "\r";
+                    String msg1 = "ATS11=" + aux + "\r";
                     System.out.println(msg1);
                     outputStream.write(msg1.getBytes());
 
@@ -354,16 +358,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         };
 
         Handler h = new Handler();
-        h.postDelayed(r, 10);
+        h.postDelayed(r, 1200);
     }
     public void write12(final String s12) throws IOException{
         Runnable r = new Runnable() {
             @Override
             public void run(){
-
+                int aux = Integer.valueOf(s12)-1;
                 try {
                     System.out.println("Estoy en el writeS12");
-                    String msg1 = "ATS12=" + s12 + "\r";
+                    String msg1 = "ATS12=" + aux + "\r";
                     System.out.println(msg1);
                     outputStream.write(msg1.getBytes());
 
@@ -374,17 +378,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         };
 
         Handler h = new Handler();
-        h.postDelayed(r, 10);
+        h.postDelayed(r, 1300);
     }
 
     public void write13(final String s13) throws IOException{
         Runnable r = new Runnable() {
             @Override
             public void run(){
-
+                int aux = Integer.valueOf(s13)-1;
                 try {
                     System.out.println("Estoy en el writeS13");
-                    String msg1 = "ATS10=" + s13 + "\r";
+                    String msg1 = "ATS13=" + aux + "\r";
                     System.out.println(msg1);
                     outputStream.write(msg1.getBytes());
 
@@ -395,7 +399,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         };
 
         Handler h = new Handler();
-        h.postDelayed(r, 10);
+        h.postDelayed(r, 1400);
     }
     public void write0(final String s0) throws IOException{
         Runnable r = new Runnable() {
@@ -404,7 +408,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
                 try {
                     System.out.println("Estoy en el writeS0");
-                    String msg1 = "ATS10=" + s0 + "\r";
+                    String msg1 = "ATS0=" + s0 + "\r";
                     System.out.println(msg1);
                     outputStream.write(msg1.getBytes());
 
@@ -415,7 +419,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         };
 
         Handler h = new Handler();
-        h.postDelayed(r, 10);
+        h.postDelayed(r, 1500);
     }
     public void write20(final String s20) throws IOException{
         Runnable r = new Runnable() {
@@ -424,7 +428,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
                 try {
                     System.out.println("Estoy en el writeS20");
-                    String msg1 = "ATS10=" + s20 + "\r";
+                    String msg1 = "ATS20=" + s20 + "\r";
                     System.out.println(msg1);
                     outputStream.write(msg1.getBytes());
 
@@ -435,8 +439,91 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         };
 
         Handler h = new Handler();
-        h.postDelayed(r, 10);
+        h.postDelayed(r, 1600);
     }
+    public void write2(final String s2) throws IOException{
+        Runnable r = new Runnable() {
+            @Override
+            public void run(){
+
+                try {
+                    System.out.println("Estoy en el writeS2");
+                    String msg1 = "ATS2=" + s2 + "\r";
+                    System.out.println(msg1);
+                    outputStream.write(msg1.getBytes());
+
+                } catch (IOException ex) {
+                }
+
+            }
+        };
+
+        Handler h = new Handler();
+        h.postDelayed(r, 1700);
+    }
+    public void write1(final String s1) throws IOException{
+        Runnable r = new Runnable() {
+            @Override
+            public void run(){
+
+                try {
+                    System.out.println("Estoy en el writeS1");
+                    String msg1 = "ATS1=" + s1+ "\r";
+                    System.out.println(msg1);
+                    outputStream.write(msg1.getBytes());
+
+                } catch (IOException ex) {
+                }
+
+            }
+        };
+
+        Handler h = new Handler();
+        h.postDelayed(r, 1800);
+    }
+    public void write14(final String s14) throws IOException{
+        Runnable r = new Runnable() {
+            @Override
+            public void run(){
+
+                try {
+                    System.out.println("Estoy en el writeS14");
+                    String msg1 = "ATS14=" + s14 + "\r";
+                    System.out.println(msg1);
+                    outputStream.write(msg1.getBytes());
+
+                } catch (IOException ex) {
+                }
+
+            }
+        };
+
+        Handler h = new Handler();
+        h.postDelayed(r, 1900);
+    }
+    public void write15(final String s15) throws IOException{
+        Runnable r = new Runnable() {
+            @Override
+            public void run(){
+
+                try {
+                    System.out.println("Estoy en el writeS15");
+                    String msg1 = "ATS15=" + s15 + "\r";
+                    System.out.println(msg1);
+                    outputStream.write(msg1.getBytes());
+
+                } catch (IOException ex) {
+                }
+
+            }
+        };
+
+        Handler h = new Handler();
+        h.postDelayed(r, 2000);
+    }
+
+
+
 
     public void showToast(final String toast)
     {
@@ -465,9 +552,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
             case R.id.btnSolicitar:
                 if(connected){
-                    sendCommand();
                     try {
+                        sendCommand();
                         sendATI5();
+                        sendATZ();
                     } catch (IOException ex) {
                     }
 
@@ -478,19 +566,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
             case R.id.btnConfigurar:
                 if(connected){
-                    sendCommand();
                     try {
-                        sendATI5();
-                        write0(repetidoraFragment.S0);
+                        sendCommand();
                         write10(repetidoraFragment.S10);
                         write11(repetidoraFragment.S11);
                         write12(repetidoraFragment.S12);
                         write13(repetidoraFragment.S13);
+                        write0(repetidoraFragment.S0);
                         write20(repetidoraFragment.S20);
+                        write2(repetidoraFragment.stringETnodeID);
+                        write1(repetidoraFragment.stringETnetID);
+                        write14(repetidoraFragment.stringPotencia1);
+                        write15(repetidoraFragment.stringPotencia2);
+                        sendSave();
+                        sendATZ();
+                        showToast("¡ Configuración Enviada !");
                     } catch (IOException ex) {
                     }
-                    sendSave();
-                    sendATZ();
+
                 }else{
                     showToast("Bluetooth desconectado");
                 }
@@ -501,4 +594,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         System.out.println(message);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        try{
+            sendATZ();
+        }catch (IOException e){
+
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try{
+            sendATZ();
+        }catch (IOException e){
+
+        }
+    }
 }
