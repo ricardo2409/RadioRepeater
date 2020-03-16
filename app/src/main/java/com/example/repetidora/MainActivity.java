@@ -246,8 +246,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     repetidoraFragment.etPotencia2.setText(String.valueOf(potencia2));
                     repetidoraFragment.spinnerZona.setSelection(Integer.valueOf(arreglo.get(0)));
                     repetidoraFragment.spinnerRepControl.setSelection(Integer.valueOf(arreglo.get(20)));
-                    repetidoraFragment.spinnerAntNodo.setSelection(Integer.valueOf(arreglo.get(12)));
-                    repetidoraFragment.spinnerAntCoord.setSelection(Integer.valueOf(arreglo.get(13)));
                     repetidoraFragment.spinnerAntRepNodo.setSelection(Integer.valueOf(arreglo.get(11)));
                     repetidoraFragment.spinnerAntRepCoord.setSelection(Integer.valueOf(arreglo.get(10)));
                 }
@@ -568,9 +566,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 if(connected){
                     try {
                         sendCommand();
-                        write10(repetidoraFragment.S10);
+                        //write10(repetidoraFragment.S10);
                         write11(repetidoraFragment.S11);
-                        write12(repetidoraFragment.S12);
+                        //write12(repetidoraFragment.S12);
                         write13(repetidoraFragment.S13);
                         write0(repetidoraFragment.S0);
                         write20(repetidoraFragment.S20);
